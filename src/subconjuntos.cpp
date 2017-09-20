@@ -3,72 +3,63 @@
 #include <vector>
 
 using std::cout;
-using std::cin;
 using std::endl;
 using std::vector;
 
 void percorreArvore(int *conjunto, int sizorig, int sizsub, vector<int> cursub) 
 {
-  // Subconjunto encontrado!
-  if(sizsub == 0) 
-  {
-    for(int i = cursub.size() - 1; i >= 0; i--) 
-      cout << cursub[i] << (i != 0 ? " " : "");
+	// Subconjunto encontrado!
+	if(sizsub == 0) 
+	{
+		for(int i = cursub.size() - 1; i >= 0; i--) 
+			cout << cursub[i] << (i != 0 ? " " : "");
 
-    cout << endl;
-    return;
-  }
+		cout << endl;
+		return;
+	}
 
-  // Corta se não for possível ter subconjunto ou se chegar numa folha sem 
-  // subconjunto.
-  if(sizorig == 0 || sizsub > sizorig)
-    return;
+	// Corta se não for possível ter subconjunto ou se chegar numa folha sem 
+	// subconjunto.
+	if(sizorig == 0 || sizsub > sizorig)
+		return;
 
-  // Caso não seja nenhum dos casos bases acima, gera as duas folhas.
-  int curelement = sizorig - 1;
-  cursub.push_back(conjunto[curelement]);
-  percorreArvore(conjunto, sizorig-1, sizsub-1, cursub);
-  cursub.pop_back();
-  percorreArvore(conjunto, sizorig-1, sizsub, cursub);
+	// Caso não seja nenhum dos casos bases acima, gera as duas folhas.
+	int curelement = sizorig - 1;
+	cursub.push_back(conjunto[curelement]);
+	percorreArvore(conjunto, sizorig-1, sizsub-1, cursub);
+	cursub.pop_back();
+	percorreArvore(conjunto, sizorig-1, sizsub, cursub);
 }
 
 // Função desncessária para esconder a declaração do vector.
 void enumeraSubconjuntos(int *conjunto, int sizorig, int sizsub) 
 {
-  vector<int> cursub;
-  percorreArvore(conjunto, sizorig, sizsub, cursub);  
+	vector<int> cursub;
+	percorreArvore(conjunto, sizorig, sizsub, cursub);  
 }
 
 int main(int argc, char *argv[]) 
 {
-  if(argc < 3) 
-  {
-    cout << "Uso: " << argv[0] << " [tamanho conj. original] [tamanho"
-      " subconjuntos] [elemento1] [elemento2] ..." << endl;
-    return 1;
-  }
+	if(argc < 3) 
+	{
+		cout << "Uso: " << argv[0] << " [tamanho conj. original] [tamanho"
+			" subconjuntos]" << endl;
+		return 1;
+	}
 
-  int sizorig = atoi(argv[1]);
-  int sizsub = atoi(argv[2]);
+	int sizorig = atoi(argv[1]);
+	int sizsub = atoi(argv[2]);
 
-  if(argc != sizorig + 3) 
-  {
-    cout << "Erro: Numero incorreto de elementos fornecidos." << endl
-      << "Esperados: " << sizorig << endl
-      << "Recebidos: " << (argc - 3) << endl;
-    return 2;
-  }
+	if(sizsub > sizorig) 
+	{
+		cout << "Erro: Subconjuntos não podem ser maior que o conjunto original" 
+			<< endl;
+		return 3;
+	}
 
-  if(sizsub > sizorig) 
-  {
-    cout << "Erro: Subconjuntos não podem ser maior que o conjunto original" 
-      << endl;
-    return 3;
-  }
+	int conjunto[sizorig];
+	for(int i = 1; i <= sizorig; i++)
+		conjunto[i-1] = i;
 
-  int conjunto[argc-3];
-  for(int i = 3; i < argc; i++)
-    conjunto[i-3] = atoi(argv[i]);
-
-  enumeraSubconjuntos(conjunto, sizorig, sizsub);
+	enumeraSubconjuntos(conjunto, sizorig, sizsub);
 }
